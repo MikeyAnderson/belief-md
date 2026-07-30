@@ -1,4 +1,4 @@
-# Belief.md Specification
+# Belief Protocol | Belief.md Specification
 
 **Version 2.0**
 
