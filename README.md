@@ -2,13 +2,15 @@
 
 **Version 2.0**
 
-> A standardized way to give AI agents a persistent philosophical and ethical operating context.
+> A standard to give AI agents a persistent philosophical and ethical operating context.
 
 ---
 
 ## Overview
 
 `belief.md` is an open format for expressing a person's or organization's beliefs, values, and epistemological commitments so that AI agents can act as genuine extensions of their principal — not just task executors, but agents that reason and prioritize in alignment with a coherent worldview.
+
+The result is referred to as a 'belief structure'. 
 
 Where `SKILL.md` encodes *how to do things*, `belief.md` encodes *why things are done, what matters, and how to reason under uncertainty*. A skill is procedural knowledge; a belief file is philosophical context.
 
