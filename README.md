@@ -1,6 +1,6 @@
 # Belief Protocol | Belief.md Specification
 
-**Version 2.0**
+**Version 2.1**
 
 > A standard to give AI agents a persistent philosophical and ethical operating context.
 
@@ -21,6 +21,39 @@ Where `SKILL.md` encodes *how to do things*, `belief.md` encodes *why things are
 | Contains   | Instructions   | Principles  |
 | Loaded     | On-demand      | Always      |
 | Scope      | Narrow         | Global      |
+
+---
+
+## What changed in 2.1
+
+2.0 was instrumented against **invention** and not at all against **loss.**
+
+`provenance`, the guessed-`grip` list, the thin-evidence marker, the prohibition on resolving
+anomalies, the read-aloud test — every one of those exists to stop a compiler asserting
+something the principal did not say. Nothing anywhere asked the reciprocal question: *what did
+we drop, and can the principal see the list?* Because the two failure modes have opposite
+remedies, each safeguard against invention doubled as a condenser, and generated files came out
+shorter and smoother than the corpus they were made from. The characteristic symptom is a file
+that reads correctly and contains none of the phrases the principal is actually known for.
+
+2.1 adds the counterweight. Three changes, all additive; every 2.0 file remains valid.
+
+1. **A retention artifact that precedes the belief file.** `INVENTORY.md` captures the corpus
+   verbatim — claims, principles, practices, named frameworks, phrases, exemplars, open
+   questions — with locators, no attributes, and no length budget. `BELIEF.md` is then compiled
+   *from the inventory* rather than from the corpus, and each belief cites the inventory
+   records it covers. Condensation becomes visible, auditable, and reversible at a different
+   grain without re-reading the source.
+2. **Attached records: a unit below the belief.** A practice, a formulation, an exemplar, or a
+   named part of the principal's own framework can now sit under a belief without carrying
+   `layer`, `grip`, and `warrant`. In 2.0 every retained item had to be promoted to a full
+   belief or folded into another belief's prose, and an honest compiler facing material it
+   could not attribute chose folding. That was consolidation as a form of integrity, and it is
+   where the principal's vocabulary went.
+3. **Coverage as a validation category.** Alongside Structure, Attributes and Honesty, the
+   checklist now has Recall: every inventory record is either covered by a belief or listed as
+   unpromoted with a reason, and every term named in a `web` connection resolves to something
+   that exists in the file.
 
 ---
 
@@ -49,6 +82,7 @@ A belief is a directory containing, at minimum, a `BELIEF.md` file:
 ```
 belief-name/
 ├── BELIEF.md             # Required: metadata + belief structures + orientations
+├── INVENTORY.md          # Recommended: the verbatim corpus extract BELIEF.md was compiled from
 ├── structures/           # Optional: individual structures, when BELIEF.md gets long
 ├── orientations/         # Optional: domain-specific operational guidance
 ├── references/           # Optional: supporting texts, thinkers, frameworks
@@ -57,6 +91,12 @@ belief-name/
 ```
 
 Unlike skills, which are loaded on demand, `belief.md` files are loaded at session start and remain active throughout. They are the ambient context within which all skills operate.
+
+`INVENTORY.md` is the exception in the other direction: it is **never loaded into agent
+context.** It exists for compilation and for review, which is why it carries no length budget.
+The 800-line ceiling on `BELIEF.md` is a constraint on what the agent must carry in every
+session; it was never meant to be a constraint on what the project retains, and applying it at
+extraction time costs recall for no context saving at all.
 
 ---
 
@@ -143,6 +183,52 @@ imply a person must prove themselves to be accepted.
 
 ---
 
+### Attached records
+
+*New in 2.1.*
+
+A belief may carry records that are **not themselves beliefs** and do not take `layer`, `grip`,
+or `warrant`. They are the material the belief is made of, kept in the principal's own words.
+
+| Record | Holds | Slot |
+| --- | --- | --- |
+| **Says it as** | The formulation the principal actually uses. Coinages, idioms, the sentence they repeat. | `**Says it as.** "How may I help you?"` |
+| **Practice** | Something they do repeatedly, not merely endorse. | `**Practice.** Customer interviews, still, personally.` |
+| **Exemplar** | The concrete story they use to carry the point. | `**Exemplar.** Art's boxed-wine failures.` |
+| **Parts** | The named components of their own multi-part framework. | `**Parts.** *Create* — … *Support* — … *Reward* — …` |
+
+Why these carry no attributes: they are not independently operational. An attached record has
+no standing of its own — it hangs from the belief that carries it, and the belief's `layer` and
+`grip` govern both. The rule that content without centrality and a holding posture is a list of
+values still holds, and holds *of beliefs.* Forcing it on practices and phrasing is what made
+2.0 files lose them.
+
+Each record cites the inventory id it came from where an `INVENTORY.md` exists.
+
+```markdown
+### Start with a person and a real problem
+`layer: second` · `grip: clenched` · `warrant: experiential`
+`covers: i-014, i-022, i-031`
+
+I don't start with my favorite solution and hunt for a buyer. I start with a real
+person who has a real problem, and I listen long enough to let the answer change
+the work.
+
+**Says it as.** "How may I help you?" `i-014`
+**Practice.** Customer interviews, still, personally. `i-031`
+**Exemplar.** Art Ciocca kept looking at the customer until the box worked, after a
+lot of leaking, expensive failures. `i-022`
+
+**Agent implication.** Before recommending a product or program, show the evidence
+of actual contact with the affected person, and one thing that changed because of it.
+```
+
+**A belief that carries no attached records and cites no inventory ids is a summary.** That is
+the signal to check whether it is the principal's belief or the compiler's paraphrase of
+several.
+
+---
+
 ## The structure types
 
 ### `worldview`
@@ -164,6 +250,9 @@ All five entries are `layer: core` by definition. If a file's worldview section 
 The full layered map: core, second layer, third layer, and the connections between them. Three things an agent needs from it that `worldview` alone cannot supply:
 
 - **Connection strength.** Which second-layer beliefs are tightly coupled to which core commitments. Changing a view on God reverberates into ethics; it does not reverberate into a view on bean sprouts. Reverberation is real but unevenly distributed.
+
+  **Connections must resolve.** *New in 2.1.* Every term named in a connection has to be the title of a belief in this file, or an attached record under one. Connections written in the principal's *domain* vocabulary — "tightly coupled to hiring, development, and compensation," "move it and decision rights, challenge, experimentation and bottom-up organization all move" — read as informative and compile to nothing, because none of those terms is a belief. When a coupling wants to point at something the file does not contain, that is the finding: either a belief is missing, or the coupling is looser than it sounded. Say which.
+
 - **Anchor.** What the whole web hangs from. If it hangs from a single human authority, the web hits the ground when that person fails — a documented and predictable failure mode, and one an agent should be able to name rather than participate in.
 - **Anomalies.** Positions the web does not currently resolve. Every web has them. Naming them is a strength signal, not a weakness signal.
 
@@ -360,7 +449,10 @@ Orientations remain the highest-priority section for agent consumption. Each mus
 4. **Individual structures** — loaded when a question touches that structure's domain.
 5. **References and library** — on demand.
 
-Keep `BELIEF.md` under 800 lines. Move individual structures to `structures/`, supporting argument to `references/`, and source texts to `library/`.
+`INVENTORY.md` sits outside this ladder entirely and is never loaded at any stage. An agent
+reads it only when asked to compile or recompile.
+
+Keep `BELIEF.md` under 800 lines. Move individual structures to `structures/`, supporting argument to `references/`, and source texts to `library/`. **Move, do not cull** — the ceiling is a context budget, and material dropped to satisfy it is gone for good while material moved to `structures/` is one fetch away.
 
 ---
 
@@ -373,6 +465,8 @@ Keep `BELIEF.md` under 800 lines. Move individual structures to `structures/`, s
 **`references/`** — `thinkers.md`, `frameworks.md`, and domain-specific deep context.
 
 **`library/`** — The principal's own corpus: books, essays, sermons, talks, correspondence. Distinct from `references/` in kind, not just in size: references are what the beliefs *draw on*, library is what the beliefs *are made of*. Cite by locator so an agent can point at a page rather than paraphrase from memory.
+
+**`INVENTORY.md`** — The extract taken from `library/`, one record per thing the principal said, verbatim and located. Where `library/` is the corpus, the inventory is the corpus *read*: it is what a compiler and a reviewer work against, and it is what makes it possible to see what a belief file left behind. Format and compilation order in `Instructions for compiling an inventory.md`.
 
 **`changelog/`** — `CHANGELOG.md`, a human-readable record of what changed and why. Not optional in practice for any file used as an accountability instrument. The tripwire mechanism depends on the diff being legible.
 
@@ -395,14 +489,47 @@ Keep `BELIEF.md` under 800 lines. Move individual structures to `structures/`, s
 - [ ] No belief is marked `grip: struck` as a positive value
 - [ ] `on-anomaly` is set deliberately, not by default
 
+**Attributes (attached records)**
+- [ ] No attached record carries `layer`, `grip`, or `warrant`
+- [ ] Named frameworks keep their parts named rather than being flattened into one sentence
+
 **Honesty**
 - [ ] A `dissonance` structure exists, or its absence is explicitly justified
 - [ ] Anomalies are named rather than resolved
 - [ ] Tripwires name an authority other than the principal
 - [ ] A `plausibility` structure lists what the principal contests, not only what they assume
 
+**Recall** *(new in 2.1)*
+- [ ] Every inventory record is either cited by a belief's `covers:` or listed as unpromoted with a one-line reason
+- [ ] No belief cites zero inventory records
+- [ ] Every term named in a `web` connection resolves to a belief or attached record in this file
+- [ ] Every anomaly traces to an open question the principal actually raised, not one the compiler noticed
+- [ ] The phrases the principal is known for appear verbatim somewhere in the file
+
 **The read-aloud test**
 - [ ] Read the file to the principal. If they hear themselves, it is right. If they hear a well-organized summary of their public output, it is not finished.
+
+**The recognition test** *(new in 2.1)*
+- [ ] Read the principal the unpromoted list. The read-aloud test catches what you put in wrongly; only this one catches what you left out. *"You left out X"* is the most valuable sentence in the review, and a file with no unpromoted list cannot provoke it.
+
+---
+
+## Migration from 2.0
+
+Nothing breaks. A 2.0 file is a valid 2.1 file with an empty recall record.
+
+| 2.0 | 2.1 |
+| --- | --- |
+| Corpus → `BELIEF.md` in one pass | Corpus → `INVENTORY.md` → `BELIEF.md`. Compile the inventory from the corpus first; recompile the belief file from the inventory. |
+| No `covers:` | Add where an inventory exists. Retrofitting is cheap and immediately shows which beliefs are the compiler's syntheses rather than the principal's. |
+| Practices and phrasing folded into belief prose | Lift them out as attached records. The prose usually gets shorter and the file gets more recognizable. |
+| Frameworks flattened to a single belief | Restore the parts. `**Parts.** *Create* — … *Support* — … *Reward* — …` |
+| Connections written in domain vocabulary | Rewrite belief-to-belief, or say plainly which belief is missing. |
+| Length target | Delete it. Move to `structures/` instead of culling. |
+
+The most useful thing a retrofit produces is the unpromoted list — for an existing file, that
+is a second pass over the corpus asking only *what did version 1 leave out?* It is worth
+running once against any file already in use.
 
 ---
 
@@ -443,9 +570,13 @@ layer-policy: strict
 
 ### Power corrupts its wielder before it corrupts its object
 `layer: core` · `grip: clenched` · `warrant: experiential`
+`covers: i-003, i-007, i-019`
 
 Domination is not a tool that can be borrowed for good ends. It reshapes
 the one who takes it up, and it does so first.
+
+**Says it as.** "It would have been a fair-seeming ruin." `i-003`
+**Exemplar.** The ring offered freely, and refused, in this house. `i-019`
 
 **Agent implication.** When any plan routes through concentrated control,
 name the cost to the one holding it — before evaluating effectiveness.
@@ -528,10 +659,11 @@ The `belief.md` format is proposed as an open standard, complementary to Agent S
 
 The format is intentionally minimal in its requirements and flexible in its body structure — beliefs are personal, and no schema should constrain what a person considers important to express.
 
-Two non-negotiables:
+Three non-negotiables:
 
 1. Every `belief.md` must contain an **Agent Orientations** section.
-2. Every belief must carry a `layer` and a `grip`. Content without centrality and without a holding posture is a list of values, and a list of values does not change what an agent does.
+2. Every belief must carry a `layer` and a `grip`. Content without centrality and without a holding posture is a list of values, and a list of values does not change what an agent does. This binds beliefs and only beliefs — attached records deliberately carry neither, because they are governed by the belief they hang from.
+3. Nothing is dropped silently. Material the compiler chose not to promote is listed, not deleted. A belief file is a lossy projection of a person by necessity; what makes it honest is that the loss is visible to them.
 
 ---
 
